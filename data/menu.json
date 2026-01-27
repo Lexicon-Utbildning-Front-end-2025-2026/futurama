@@ -1,0 +1,14 @@
+[
+    {
+        "href": "/",
+        "name": "Home"
+    },
+    {
+        "href": "/about",
+        "name": "About Futurama"
+    },
+    {
+        "href": "/contact",
+        "name": "Contact us"
+    }
+]
