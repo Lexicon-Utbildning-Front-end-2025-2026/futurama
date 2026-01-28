@@ -1,6 +1,17 @@
 import Image from "next/image";
+import data from "@/data/characters.json"
+import CardGrid from "@/components/ui/card-grid";
+
+
 
 export default function Home() {
+
+  //const characters = data.items
+  //const total = data.total
+
+  //desctructuring av samma som ovan
+  const { items: characters, total } = data
+
   return (
     <main>
 
@@ -22,7 +33,21 @@ export default function Home() {
         </div>
       </section>
 
-      <section>Card...</section>
+      {/* {CardGrid(characters)} */}
+      <CardGrid characters={characters} />
+      {/* <section>
+        <h2>Characters</h2>
+        <ul className="grid grid-cols-[repeat(auto-fill,minmax(35ch,1fr))] gap-4">
+          {
+            characters.map((character) => (
+              <li key={character.id}>
+                <h3>{character.name}</h3>
+                <Image className="w-full" src={character.image ?? "/placeholder.png"} width={100} height={100} alt={character.name} />
+              </li>))
+          }
+
+        </ul>
+      </section> */}
     </main>
   );
 }
