@@ -1,11 +1,10 @@
 import Image from "next/image";
 import data from "@/data/characters.json"
 import CardGrid from "@/components/ui/card-grid";
-
-
+import Wrapper from "@/components/ui/wrapper";
+import CharacterGrid from "@/components/ui/character-grid";
 
 export default function Home() {
-
   //const characters = data.items
   //const total = data.total
 
@@ -33,8 +32,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* {CardGrid(characters)} */}
-      <CardGrid characters={characters} />
+      { /*** Here we render our grid without any components, good for simple cases like this ***/}
       {/* <section>
         <h2>Characters</h2>
         <ul className="grid grid-cols-[repeat(auto-fill,minmax(35ch,1fr))] gap-4">
@@ -48,6 +46,31 @@ export default function Home() {
 
         </ul>
       </section> */}
+
+      {/*** This is not the correct way of doing a component, but intead makes a function with an argument that return jsx ***/}
+      {/* {CardGrid(characters)} */}
+
+      {/*** This is the correct way of doing a component, it takes props - in this case characters and looks like a HTML tag ***/}
+      <CharacterGrid characters={characters} />
+
+
+      { /*** Example use for a wrapper component with children ***/}
+      <Wrapper>
+        Hej
+        <div>apa</div>
+      </Wrapper>
+
+      { /*** Example use of a grid that uses children and doesn't care about what data it recieves above that ***/}
+      {/* <CardGrid title="Characters">
+        {
+          characters.map((character) => (
+            <li key={character.id}>
+              <h3>{character.name}</h3>
+              <Image className="w-full" src={character.image ?? "/placeholder.png"} width={100} height={100} alt={character.name} />
+            </li>))
+        }
+      </CardGrid> */}
+
     </main>
   );
 }
