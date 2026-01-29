@@ -2,15 +2,24 @@ import Image from "next/image";
 import CharacterGrid from "@/components/ui/character-grid";
 import data from "@/data/characters.json";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | undefined }>
-}) {
+export default async function Home(params: PageProps<"/">) {
+  // export default async function Home({
+  //   searchParams,
+  // }: {
+  //   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  // }) {
 
-  const {limit = 10} = await (searchParams)
+  // get whatever the limit is now, could be string, string[] or undefined.
+  // If undefined we instead set a default value, in this case 12
+  // (we type it as string since we will convert it anyway, but this isn't important since both "12" and 12 becomes 12)
+  const { limit = "12" } = await params.searchParams;
 
-  const characters = data.items.slice(0,Number(limit));
+  // Now we check if it's an array, if so we only take the first number, if not we use the limit value
+  // this is then converted to a number with Number()
+  const limitNumber = Number(Array.isArray(limit) ? limit[0] : limit);
+
+  // we slice the list from zero to our limit
+  const characters = data.items.slice(0, limitNumber);
 
   return (
     <main>
@@ -42,11 +51,8 @@ export default async function Home({
         </div>
       </section>
 
-
       {/*** This is the correct way of doing a component, it takes props - in this case characters and looks like a HTML tag ***/}
       <CharacterGrid characters={characters} />
-
-     
     </main>
   );
 }
