@@ -1,14 +1,14 @@
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <>
-            <nav>
-                <a href="/contact-2">Contact support</a>
-            </nav>
-            {children}
-        </>
-    );
+  return (
+    <>
+      <nav>
+        <a href="/contact-2">Contact support</a>
+      </nav>
+      {children}
+    </>
+  );
 }
