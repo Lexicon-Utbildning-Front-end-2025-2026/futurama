@@ -1,10 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Character } from "@/types/futurama";
 
 export default function CharacterCard({ character }: { character: Character }) {
   return (
-    <div 
-      className={`relative border rounded-xl shadow-md overflow-hidden ${character.status === "DEAD" ? "border-red-600 border-4" : ""}`}
+    <Link href={`/character/${character.id}`}
+      className={`block relative border rounded-xl shadow-md overflow-hidden ${character.status === "DEAD" ? "border-red-600 border-4" : ""}`}
     >
       <h3 className="absolute bottom-0 left-0 right-0 px-6 pb-5 pt-20 backdrop-blur-xs mask-t-from-45% text-2xl font-josefin font-bold text-center bg-black/40 text-white">
         {character.name}
@@ -16,6 +17,6 @@ export default function CharacterCard({ character }: { character: Character }) {
         height={200}
         alt={character.name}
       />
-    </div>
+    </Link>
   );
 }
