@@ -3,6 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import data from "@/data/characters.json";
 
+//If you want to make the page rendered statically (not sure how useful this is with json right now, but anyway)
+export async function generateStaticParams() {
+  return data.items.map((character) => ({
+    id: character.id,
+  }));
+}
+
 //export default async function CharacterPage({params}:{params: Promise<{id:string}>}){
 //export default async function CharacterPage(props:PageProps<"/character/[id]">){
 export default async function CharacterPage({
