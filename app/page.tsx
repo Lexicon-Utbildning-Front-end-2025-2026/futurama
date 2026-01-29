@@ -2,9 +2,15 @@ import Image from "next/image";
 import CharacterGrid from "@/components/ui/character-grid";
 import data from "@/data/characters.json";
 
-export default function Home() {
-  //desctructuring av samma som ovan
-  const { items: characters } = data;
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>
+}) {
+
+  const {limit = 10} = await (searchParams)
+
+  const characters = data.items.slice(0,Number(limit));
 
   return (
     <main>
