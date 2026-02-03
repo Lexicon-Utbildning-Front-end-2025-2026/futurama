@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import CharacterGrid from "@/components/ui/character-grid";
-//import data from "@/data/characters.json";
 
 export default async function Home(params: PageProps<"/">) {
   // export default async function Home({
@@ -9,33 +9,16 @@ export default async function Home(params: PageProps<"/">) {
   // }: {
   //   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
   // }) {
+
   // get whatever the limit is now, could be string, string[] or undefined.
   // If undefined we instead set a default value, in this case 12
   // (we type it as string since we will convert it anyway, but this isn't important since both "12" and 12 becomes 12)
   const { limit = "12" } = await params.searchParams;
 
-  console.log(limit);
-
   // Now we check if it's an array, if so we only take the first number, if not we use the limit value
   // this is then converted to a number with Number()
+  //TODO: forward this to our component if we want to use it
   const limitNumber = Number(Array.isArray(limit) ? limit[0] : limit);
-
-  const response = await fetch(
-    `https://futuramaapi.com/api/characters?size=${limitNumber}`,
-    //{ cache: "force-cache" },
-    //{ next: { revalidate: 3600 } }
-  );
-
-  if (!response.ok) return "there was an error";
-
-  const data = await response.json();
-
-  const characters = data.items;
-
-  if (!characters) return "no characters";
-
-  // we slice the list from zero to our limit
-  //const characters = data.items.slice(0, limitNumber);
 
   return (
     <main>
@@ -66,7 +49,6 @@ export default async function Home(params: PageProps<"/">) {
           />
         </div>
       </section>
-
       <div className="flex gap-4 pt-8 px-4 ">
         <p>Limit: </p>
         <Link className="font-bold" href="/?limit=8">
@@ -76,8 +58,10 @@ export default async function Home(params: PageProps<"/">) {
           12
         </Link>
       </div>
-      {/*** This is the correct way of doing a component, it takes props - in this case characters and looks like a HTML tag ***/}
-      <CharacterGrid characters={characters} />
+      {/*** we can use suspense to show a loading message/skeleton or whatever while we wait for the data ***/}
+      <Suspense fallback={<div>Loading...</div>}>
+        <CharacterGrid />
+      </Suspense>
     </main>
   );
 }
