@@ -9,11 +9,12 @@ export default async function Home(params: PageProps<"/">) {
   // }: {
   //   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
   // }) {
-
   // get whatever the limit is now, could be string, string[] or undefined.
   // If undefined we instead set a default value, in this case 12
   // (we type it as string since we will convert it anyway, but this isn't important since both "12" and 12 becomes 12)
   const { limit = "12" } = await params.searchParams;
+
+  console.log(limit);
 
   // Now we check if it's an array, if so we only take the first number, if not we use the limit value
   // this is then converted to a number with Number()
@@ -21,6 +22,8 @@ export default async function Home(params: PageProps<"/">) {
 
   const response = await fetch(
     `https://futuramaapi.com/api/characters?size=${limitNumber}`,
+    //{ cache: "force-cache" },
+    //{ next: { revalidate: 3600 } }
   );
 
   if (!response.ok) return "there was an error";
