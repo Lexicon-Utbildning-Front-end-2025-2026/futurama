@@ -4,7 +4,8 @@ import type { Character } from "@/types/futurama";
 
 export default function CharacterCard({ character }: { character: Character }) {
   return (
-    <Link href={`/character/${character.id}`}
+    <Link
+      href={`/character/${character.id}`}
       className={`block relative border rounded-xl shadow-md overflow-hidden ${character.status === "DEAD" ? "border-red-600 border-4" : ""}`}
     >
       <h3 className="absolute bottom-0 left-0 right-0 px-6 pb-5 pt-20 backdrop-blur-xs mask-t-from-45% text-2xl font-josefin font-bold text-center bg-black/40 text-white">
@@ -13,9 +14,10 @@ export default function CharacterCard({ character }: { character: Character }) {
       <Image
         className="w-full aspect-square object-cover"
         src={character.image ?? "/placeholder.png"}
-        width={200}
-        height={200}
+        width={600}
+        height={600}
         alt={character.name}
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 30vw, 25vw"
       />
     </Link>
   );
