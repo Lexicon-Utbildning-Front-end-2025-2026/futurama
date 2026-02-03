@@ -1,6 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import CharacterGrid from "@/components/ui/character-grid";
-import data from "@/data/characters.json";
+//import data from "@/data/characters.json";
 
 export default async function Home(params: PageProps<"/">) {
   // export default async function Home({
@@ -18,8 +19,20 @@ export default async function Home(params: PageProps<"/">) {
   // this is then converted to a number with Number()
   const limitNumber = Number(Array.isArray(limit) ? limit[0] : limit);
 
+  const response = await fetch(
+    `https://futuramaapi.com/api/characters?size=${limitNumber}`,
+  );
+
+  if (!response.ok) return "there was an error";
+
+  const data = await response.json();
+
+  const characters = data.items;
+
+  if (!characters) return "no characters";
+
   // we slice the list from zero to our limit
-  const characters = data.items.slice(0, limitNumber);
+  //const characters = data.items.slice(0, limitNumber);
 
   return (
     <main>
@@ -51,6 +64,15 @@ export default async function Home(params: PageProps<"/">) {
         </div>
       </section>
 
+      <div className="flex gap-4 pt-8 px-4 ">
+        <p>Limit: </p>
+        <Link className="font-bold" href="/?limit=8">
+          8
+        </Link>
+        <Link className="font-bold" href="/?limit=12">
+          12
+        </Link>
+      </div>
       {/*** This is the correct way of doing a component, it takes props - in this case characters and looks like a HTML tag ***/}
       <CharacterGrid characters={characters} />
     </main>
