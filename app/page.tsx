@@ -13,12 +13,13 @@ export default async function Home(params: PageProps<"/">) {
   // get whatever the limit is now, could be string, string[] or undefined.
   // If undefined we instead set a default value, in this case 12
   // (we type it as string since we will convert it anyway, but this isn't important since both "12" and 12 becomes 12)
-  const { limit = "12" } = await params.searchParams;
+  const { limit = "12",  sortDirection="asc"} = await params.searchParams;
 
   // Now we check if it's an array, if so we only take the first number, if not we use the limit value
   // this is then converted to a number with Number()
   //TODO: forward this to our component if we want to use it
   const limitNumber = Number(Array.isArray(limit) ? limit[0] : limit);
+  const sortDirectionString = Array.isArray(sortDirection) ? sortDirection[0] : sortDirection;
 
   return (
     <main>
@@ -49,7 +50,7 @@ export default async function Home(params: PageProps<"/">) {
           />
         </div>
       </section>
-      <div className="flex gap-4 pt-8 px-4 ">
+      <div className="container mx-auto flex gap-4 pt-8 px-4 ">
         <p>Limit: </p>
         <Link className="font-bold" href="/?limit=8">
           8
@@ -58,9 +59,18 @@ export default async function Home(params: PageProps<"/">) {
           12
         </Link>
       </div>
+      <div className="container mx-auto flex gap-4 pt-8 px-4 ">
+        <p>Sort order: </p>
+        <Link className="font-bold" href={`/?limit=${limitNumber}&sortDirection=asc`}>
+          ascending
+        </Link>
+        <Link className="font-bold" href={`/?limit=${limitNumber}&sortDirection=desc`}>
+          descending
+        </Link>
+      </div>
       {/*** we can use suspense to show a loading message/skeleton or whatever while we wait for the data ***/}
       <Suspense fallback={<div>Loading...</div>}>
-        <CharacterGrid />
+        <CharacterGrid limit={limitNumber} sortDirection={sortDirectionString}/>
       </Suspense>
     </main>
   );

@@ -1,6 +1,8 @@
 import { Character } from "@/types/futurama";
 
-export async function getCharacters(): Promise<
+const URL_API = "https://futuramaapi.com/api"
+
+export async function getCharacters(limit = 12, sortDirection = "asc"): Promise<
   Character[] | { message: string }
 > {
   // sometimes we want to check if the user is authenticated before returning any data
@@ -11,7 +13,7 @@ export async function getCharacters(): Promise<
   // try catch is often used for uncaught exceptions - https://nextjs.org/docs/app/getting-started/error-handling
   try {
     const response = await fetch(
-      `https://futuramaapi.com/api/characters`,
+      `${URL_API}/characters/?size=${limit}&orderByDirection=${sortDirection}`,
       // a couple of cache options for fetch, default is no cache
       // this one forces the fetch to be cached
       //{ cache: "force-cache" },
@@ -43,22 +45,31 @@ export async function getCharacters(): Promise<
   }
 }
 
-export async function getCharacter() {
+export const getCharacter = async (id: number): Promise<Character> => {
   //auth
   //if (!admin) return null
 
   const response = await fetch(
-    `https://futuramaapi.com/api/characters`,
+    `${URL_API}/characters/${id}`,
     //{ cache: "force-cache" },
     //{ next: { revalidate: 3600 } }
   );
 
-  if (!response.ok) return { message: "there was an error" };
-
-  const data = await response.json();
-
-  //TODO: maybe make some more checks here...
-  const characters = data.items as Character[];
-
-  return characters;
+  //TODO: error handling
+  return await response.json();
 }
+
+
+// export async function getCharacter(id: number): Promise<Character> {
+//   //auth
+//   //if (!admin) return null
+
+//   const response = await fetch(
+//     `${URL_API}/characters/${id}`,
+//     //{ cache: "force-cache" },
+//     //{ next: { revalidate: 3600 } }
+//   );
+
+//   //TODO: error handling
+//   return await response.json();
+// }

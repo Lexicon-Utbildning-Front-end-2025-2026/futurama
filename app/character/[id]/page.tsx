@@ -1,14 +1,39 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import data from "@/data/characters.json";
+
+import { getCharacter, getCharacters } from "@/data/character";
+import { Metadata } from "next";
 
 //If you want to make the page rendered statically (not sure how useful this is with json right now, but anyway)
 export async function generateStaticParams() {
-  return data.items.map((character) => ({
+   const characters = await getCharacters();
+   if ("message" in characters || !characters) {
+    // we can log it with console.error()
+    console.error(characters.message); 
+  return null
+  }
+
+  return characters.map((character) => ({
     id: character.id.toString(),
   }));
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/character/[id]">): Promise<Metadata> {
+  // read route params
+  const { id } = await params
+  const idNumber = Number(id)
+
+  // fetch data
+  const character = await getCharacter(idNumber);
+ 
+  return {
+    title: `Futurama - ${character.name}`
+  }
+}
+ 
 
 //export default async function CharacterPage({params}:{params: Promise<{id:string}>}){
 //export default async function CharacterPage(props:PageProps<"/character/[id]">){
@@ -16,8 +41,10 @@ export default async function CharacterPage({
   params,
 }: PageProps<"/character/[id]">) {
   const { id } = await params;
+  const idNumber = Number(id)
   //const {id} = await props.params
-  const character = data.items.find((character) => character.id === Number(id));
+  //const character = data.items.find((character) => character.id === Number(id));
+  const character = await getCharacter(idNumber);
 
   if (!character) notFound();
 
