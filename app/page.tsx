@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 import CharacterGrid from "@/components/ui/character-grid";
 import { getCharacters } from "@/data/character";
 
@@ -21,26 +20,15 @@ export default async function Home(params: PageProps<"/">) {
     ? sortDirection[0]
     : sortDirection;
 
-  // the issue now is that we can't access the fetched data this way since we await it inside the component.
-  // so we can't find out how many pages there are or other things we get back from the API
-  // That means we have to either we skip suspense and fetch the data in the page, or we pass on all the props downwards into the components
-  // With client side code we can do this in other ways, but for now we are a bit limited.
-  // There is also a third way we can do meanwhile, we pass on the searchParams instead.
-  // I'll make a branch with this solution too
-
-  // Hard coded pages which are pointless, but to get rid of error
-  // this are used to see if the pagination links are active or not
-  const pages = 30;
-
   // instead of fetching the characters inside the component I fetch them here
   // thus eliminating passing all the props down
-  // I don't do await here but instead pass the promise down to the component
-  // this makes it possible to stream with suspense since the await is in that component
-  const fetchPromise = getCharacters(
-    currentLimit,
-    sortDirectionString,
-    currentPage,
-  );
+  // this will however remove the possibility of using suspense, so this is a downside
+  // I use destructuring to get the characters and other values I want to use from the response
+  const {
+    items: characters,
+    pages,
+    total,
+  } = await getCharacters(currentLimit, sortDirectionString, currentPage);
 
   return (
     <main>
@@ -72,6 +60,9 @@ export default async function Home(params: PageProps<"/">) {
         </div>
       </section>
       {/* Filter section */}
+      <div className="container mx-auto flex gap-4 pt-8 px-4 ">
+        Displaying {currentLimit} out of {total} items
+      </div>
       {/* TODO: Fix these so they are more dynamic and modular */}
       <div className="container mx-auto flex gap-4 pt-8 px-4 ">
         <p>Limit: </p>
@@ -97,7 +88,10 @@ export default async function Home(params: PageProps<"/">) {
           descending
         </Link>
       </div>
-      {/* Basic Pagination with conditional rendering if we are on first or last page */}
+      {/* 
+      Basic Pagination with conditional rendering if we are on first or last page
+      For now the links are hard coded and doesn't take into account sorting for example
+       */}
       <div className="flex justify-center gap-4">
         {currentPage - 1 >= 1 && (
           <Link href={`/?page=${currentPage - 1}&limit=${currentLimit}`}>
@@ -111,9 +105,7 @@ export default async function Home(params: PageProps<"/">) {
         )}
       </div>
       {/* Cards section */}
-      <Suspense fallback={<div>Loading...</div>}>
-        <CharacterGrid promise={fetchPromise} />
-      </Suspense>
+      <CharacterGrid characters={characters} />
     </main>
   );
 }

@@ -1,50 +1,46 @@
 import type { Character } from "@/types/futurama";
 
-const URL_API = "https://futuramaapi.com/api"
+const URL_API = "https://futuramaapi.com/api";
 
-export async function getCharacters(limit = 12, sortDirection = "asc", page=1): Promise<
-  Character[] | { message: string }
-> {
-  // sometimes we want to check if the user is authenticated before returning any data
-  //if (!admin) return null
+// Interface for the full response from the API, including number of items and more
+interface CharactersResponse {
+  items: Character[];
+  total: number;
+  page: number;
+  size: number;
+  pages: number;
+}
 
-  // we can do a try catch here if we want to, but it's not always preferred
-  // if we don't do a try catch we need to handle the errors manually be comparing data or such
-  // try catch is often used for uncaught exceptions - https://nextjs.org/docs/app/getting-started/error-handling
+export async function getCharacters(
+  limit = 12,
+  sortDirection = "asc",
+  page = 1,
+): Promise<CharactersResponse> {
+  // this is a shortcut if we want to make the url a bit less messy
+  const params = new URLSearchParams({
+    size: limit.toString(),
+    orderByDirection: sortDirection,
+    page: page.toString(),
+  });
+
+  // in this example I skip the error handling just to keep it simple
+  // it will throw an error if the api is down, so if there are no error.ts file the app will crasch
   try {
     const response = await fetch(
-      `${URL_API}/characters/?size=${limit}&orderByDirection=${sortDirection}&page=${page}`,
-      // a couple of cache options for fetch, default is no cache
-      // this one forces the fetch to be cached
-      //{ cache: "force-cache" },
-      // this clears the cache every 3600 seconds (1 hour)
-      //{ next: { revalidate: 3600 } }
+      // use without URLSearchParams
+      // `${URL_API}/characters/?size=${limit}&orderByDirection=${sortDirection}&page=${page}`,
+
+      // if we do the URLSearchParams trick above we can shorten this to following
+      `${URL_API}/characters/?${params}`,
     );
 
-    // if we don't get a clear ok we return an error for the calling component to handle
-    if (!response.ok)
-      return {
-        message: "there was an error",
-      };
-
-    // if not we proces the body as json
-    const data = await response.json();
-
-    //TODO: maybe make some more checks here...
-    const characters = data.items as Character[];
-
-    // and return the data
-    return characters;
+    return await response.json();
   } catch {
-    // here we can throw an error for the error boundry
     throw new Error("API is down...");
-    // or return a message
-    // return {
-    //     message: "there was an error",
-    //   };
   }
 }
 
+// example with arrow function instead of function declaration
 export const getCharacter = async (id: number): Promise<Character> => {
   //auth
   //if (!admin) return null
@@ -57,19 +53,4 @@ export const getCharacter = async (id: number): Promise<Character> => {
 
   //TODO: error handling
   return await response.json();
-}
-
-
-// export async function getCharacter(id: number): Promise<Character> {
-//   //auth
-//   //if (!admin) return null
-
-//   const response = await fetch(
-//     `${URL_API}/characters/${id}`,
-//     //{ cache: "force-cache" },
-//     //{ next: { revalidate: 3600 } }
-//   );
-
-//   //TODO: error handling
-//   return await response.json();
-// }
+};
