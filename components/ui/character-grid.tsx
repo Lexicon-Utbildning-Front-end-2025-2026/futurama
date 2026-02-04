@@ -1,23 +1,13 @@
 import CharacterCard from "@/components/ui/character-card";
-import { getCharacters } from "@/data/character";
+import type { Character } from "@/types/futurama";
 
-export default async function CharacterGrid({limit, sortDirection}:{limit:number, sortDirection: string}) {
-  // ** this is a server component fetch inside the component **/
-  // const response = await fetch(
-  //   `https://futuramaapi.com/api/characters`,
-  //   //{ cache: "force-cache" },
-  //   //{ next: { revalidate: 3600 } }
-  // );
-
-  // if (!response.ok) return "there was an error";
-
-  // const data = await response.json();
-
-  // //TODO: maybe make some more checks here...
-  // const characters = data.items as Character[];
-
-  // Here we use a fetch that is moved to a kind of data access layer, more robust and reusable
-  const data = await getCharacters(limit, sortDirection);
+export default async function CharacterGrid({
+  promise,
+}: {
+  promise: Promise<Character[] | { message: string }>;
+}) {
+  // here we await our promise with the characters/message for error handling
+  const data = await promise;
 
   //we check if there is a message part in our data, if so handle the message
   if ("message" in data || !data) {

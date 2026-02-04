@@ -1,8 +1,8 @@
-import { Character } from "@/types/futurama";
+import type { Character } from "@/types/futurama";
 
 const URL_API = "https://futuramaapi.com/api"
 
-export async function getCharacters(limit = 12, sortDirection = "asc"): Promise<
+export async function getCharacters(limit = 12, sortDirection = "asc", page=1): Promise<
   Character[] | { message: string }
 > {
   // sometimes we want to check if the user is authenticated before returning any data
@@ -13,7 +13,7 @@ export async function getCharacters(limit = 12, sortDirection = "asc"): Promise<
   // try catch is often used for uncaught exceptions - https://nextjs.org/docs/app/getting-started/error-handling
   try {
     const response = await fetch(
-      `${URL_API}/characters/?size=${limit}&orderByDirection=${sortDirection}`,
+      `${URL_API}/characters/?size=${limit}&orderByDirection=${sortDirection}&page=${page}`,
       // a couple of cache options for fetch, default is no cache
       // this one forces the fetch to be cached
       //{ cache: "force-cache" },
