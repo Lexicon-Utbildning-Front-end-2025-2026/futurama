@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Futurama - About",
+  description: "The story about Futurama, so far...",
+};
+
+
 export default function About() {
   const title = "About Futurama";
 
