@@ -1,39 +1,40 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LikeButton } from "@/components/ui/like-button";
+import { getCharacter } from "@/data/character";
+import { getLikes } from "@/data/likes";
 
-import { getCharacter, getCharacters } from "@/data/character";
-import { Metadata } from "next";
-
+export const dynamic = "force-dynamic";
 //If you want to make the page rendered statically (not sure how useful this is with json right now, but anyway)
-export async function generateStaticParams() {
-   const characters = await getCharacters();
-   if ("message" in characters || !characters) {
-    // we can log it with console.error()
-    console.error(characters.message); 
-  return null
-  }
+// export async function generateStaticParams() {
+//    const characters = await getCharacters();
+//    if ("message" in characters || !characters) {
+//     // we can log it with console.error()
+//     console.error(characters.message);
+//   return null
+//   }
 
-  return characters.map((character) => ({
-    id: character.id.toString(),
-  }));
-}
+//   return characters.map((character) => ({
+//     id: character.id.toString(),
+//   }));
+// }
 
 export async function generateMetadata({
   params,
 }: PageProps<"/character/[id]">): Promise<Metadata> {
   // read route params
-  const { id } = await params
-  const idNumber = Number(id)
+  const { id } = await params;
+  const idNumber = Number(id);
 
   // fetch data
   const character = await getCharacter(idNumber);
- 
+
   return {
-    title: `Futurama - ${character.name}`
-  }
+    title: `Futurama - ${character.name}`,
+  };
 }
- 
 
 //export default async function CharacterPage({params}:{params: Promise<{id:string}>}){
 //export default async function CharacterPage(props:PageProps<"/character/[id]">){
@@ -41,12 +42,15 @@ export default async function CharacterPage({
   params,
 }: PageProps<"/character/[id]">) {
   const { id } = await params;
-  const idNumber = Number(id)
+  const idNumber = Number(id);
   //const {id} = await props.params
   //const character = data.items.find((character) => character.id === Number(id));
   const character = await getCharacter(idNumber);
 
   if (!character) notFound();
+
+  //const name = encodeURIComponent(character.name);
+  const likes = getLikes(character.name);
 
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
@@ -67,6 +71,7 @@ export default async function CharacterPage({
           <h1 className="text-4xl font-bold mb-2 font-josefin">
             {character.name}
           </h1>
+          <LikeButton name={character.name} initialLikes={likes} />
 
           <section>
             <header>
