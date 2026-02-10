@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CharacterCard from "@/components/ui/character-card";
+import LimitSelect from "@/components/ui/limit-select";
 import { getCharacters } from "@/data/character";
 
 // in this example I pass down the searchParams to the component and I let it handle everything from render the cards to pagination and so on
@@ -37,18 +38,10 @@ export default async function CharacterGrid({
       <h2 className="text-3xl font-bold font-josefin">Characters</h2>
       {/* Filter section */}
       <div className="container mx-auto flex gap-4 pt-8 px-4 ">
-        Displaying {currentLimit} out of {total} items
+        Displaying <LimitSelect /> out of {total} items
       </div>
       {/* TODO: Fix these so they are more dynamic and modular */}
-      <div className="container mx-auto flex gap-4 pt-8 px-4 ">
-        <p>Limit: </p>
-        <Link className="font-bold" href="/?limit=8">
-          8
-        </Link>
-        <Link className="font-bold" href="/?limit=12">
-          12
-        </Link>
-      </div>
+
       <div className="container mx-auto flex gap-4 pt-8 px-4 ">
         <p>Sort order: </p>
         <Link
