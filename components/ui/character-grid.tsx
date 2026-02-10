@@ -1,6 +1,7 @@
 import Link from "next/link";
 import CharacterCard from "@/components/ui/character-card";
 import LimitSelect from "@/components/ui/limit-select";
+import Pagination from "@/components/ui/pagination";
 import { getCharacters } from "@/data/character";
 
 // in this example I pass down the searchParams to the component and I let it handle everything from render the cards to pagination and so on
@@ -57,19 +58,8 @@ export default async function CharacterGrid({
           descending
         </Link>
       </div>
-      {/* Basic Pagination with conditional rendering if we are on first or last page */}
-      <div className="flex justify-center gap-4">
-        {currentPage - 1 >= 1 && (
-          <Link href={`/?page=${currentPage - 1}&limit=${currentLimit}`}>
-            &larr; Previous
-          </Link>
-        )}
-        {currentPage + 1 <= pages && (
-          <Link href={`/?page=${currentPage + 1}&limit=${currentLimit}`}>
-            Next &rarr;
-          </Link>
-        )}
-      </div>
+      {/* Pagination component handling navigation */}
+      <Pagination totalPages={pages} />
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(35ch,1fr))] gap-4">
         {characters.map((character) => (
           <li key={character.id}>
