@@ -1,7 +1,7 @@
-import Link from "next/link";
 import CharacterCard from "@/components/ui/character-card";
 import LimitSelect from "@/components/ui/limit-select";
 import Pagination from "@/components/ui/pagination";
+import SortSelect from "@/components/ui/sort-select";
 import { getCharacters } from "@/data/character";
 
 // in this example I pass down the searchParams to the component and I let it handle everything from render the cards to pagination and so on
@@ -43,20 +43,8 @@ export default async function CharacterGrid({
       </div>
       {/* TODO: Fix these so they are more dynamic and modular */}
 
-      <div className="container mx-auto flex gap-4 pt-8 px-4 ">
-        <p>Sort order: </p>
-        <Link
-          className="font-bold"
-          href={`/?limit=${currentLimit}&sortDirection=asc`}
-        >
-          ascending
-        </Link>
-        <Link
-          className="font-bold"
-          href={`/?limit=${currentLimit}&sortDirection=desc`}
-        >
-          descending
-        </Link>
+      <div className="container mx-auto pt-8 px-4">
+        <SortSelect />
       </div>
       {/* Pagination component handling navigation */}
       <Pagination totalPages={pages} />
