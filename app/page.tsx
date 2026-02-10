@@ -1,8 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Suspense } from "react";
 import CharacterGrid from "@/components/ui/character-grid";
-import { getCharacters } from "@/data/character";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default async function Home(params: PageProps<"/">) {
