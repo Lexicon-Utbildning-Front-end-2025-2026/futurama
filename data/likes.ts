@@ -1,5 +1,5 @@
 // Ett enkelt minne på servern
-// Mapen sparar: Pokémon-namn -> antal likes
+// Mapen sparar: Namn -> antal likes
 // OBS: Detta lever så länge servern körs
 
 // use globalThis to store the likes. Otherwise we will have different maps in different processes (server/client)
@@ -18,8 +18,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export function getLikes(name: string) {
-  console.log("Current store:", likesStore);
-  // Ensure we check for the decoded name if needed, but we unified on raw name
   return likesStore.get(name) || 0;
 }
 

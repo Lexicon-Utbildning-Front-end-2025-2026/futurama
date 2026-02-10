@@ -8,17 +8,18 @@ export default function MainNavigation() {
       <div className="font-bold container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/">
           <Image
+            className="w-[150px]"
             src="/futurama-line.svg"
-            width={150}
-            height={50}
+            width={1024}
+            height={181}
             alt="Futurama"
           />
         </Link>
         <ul className="flex gap-6">
           {
             //renderMenu()
-            data.map((item, index) => (
-              <li key={index}>
+            data.map((item) => (
+              <li key={item.href}>
                 <Link
                   className="hover:text-sky-400 transition-colors"
                   href={item.href}

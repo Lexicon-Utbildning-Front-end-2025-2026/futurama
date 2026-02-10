@@ -3,23 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LikeButton } from "@/components/ui/like-button";
-import { getCharacter } from "@/data/character";
+import { getCharacter, getCharacters } from "@/data/character";
 import { getLikes } from "@/data/likes";
 
 export const dynamic = "force-dynamic";
-//If you want to make the page rendered statically (not sure how useful this is with json right now, but anyway)
-// export async function generateStaticParams() {
-//    const characters = await getCharacters();
-//    if ("message" in characters || !characters) {
-//     // we can log it with console.error()
-//     console.error(characters.message);
-//   return null
-//   }
 
-//   return characters.map((character) => ({
-//     id: character.id.toString(),
-//   }));
-// }
+//If you want to make the page rendered statically (not sure how useful this is with json right now, but anyway)
+export async function generateStaticParams() {
+  const { items: characters } = await getCharacters();
+
+  return characters.map((character) => ({
+    id: character.id.toString(),
+  }));
+}
 
 export async function generateMetadata({
   params,
@@ -36,20 +32,15 @@ export async function generateMetadata({
   };
 }
 
-//export default async function CharacterPage({params}:{params: Promise<{id:string}>}){
-//export default async function CharacterPage(props:PageProps<"/character/[id]">){
 export default async function CharacterPage({
   params,
 }: PageProps<"/character/[id]">) {
   const { id } = await params;
   const idNumber = Number(id);
-  //const {id} = await props.params
-  //const character = data.items.find((character) => character.id === Number(id));
   const character = await getCharacter(idNumber);
 
   if (!character) notFound();
 
-  //const name = encodeURIComponent(character.name);
   const likes = getLikes(character.name);
 
   return (
