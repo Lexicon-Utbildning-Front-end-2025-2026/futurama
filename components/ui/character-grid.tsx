@@ -3,6 +3,10 @@ import LimitSelect from "@/components/ui/limit-select";
 import Pagination from "@/components/ui/pagination";
 import SortSelect from "@/components/ui/sort-select";
 import { getCharacters } from "@/data/character";
+import {
+  getSearchParamsAsNumber,
+  getSearchParamsAsString,
+} from "@/lib/utils";
 
 // in this example I pass down the searchParams to the component and I let it handle everything from render the cards to pagination and so on
 // usually the pagination would be moved into another component, but this is outside scope of this exemple
@@ -13,23 +17,19 @@ export default async function CharacterGrid({
 }) {
   // Here we use destructuring to get the searchParams and if we want we can set default values too
   const {
-    limit = "12",
-    sortDirection = "asc",
-    page = "1",
+    limit,
+    sortDirection,
+    page,
     query,
   } = await searchParams;
 
   // Type for searchParams are by default - searchParams: Promise<{ [key: string]: string | string[] | undefined }>
   // So we need to check if it's an array or not
   // if so we only take the first value, if not we use the value as is
-  const currentLimit = Number(Array.isArray(limit) ? limit[0] : limit);
-  const currentPage = Number(Array.isArray(page) ? page[0] : page);
-  const sortDirectionString = Array.isArray(sortDirection)
-    ? sortDirection[0]
-    : sortDirection;
-  const queryString = Array.isArray(query)
-    ? query[0]
-    : query;
+  const currentLimit = getSearchParamsAsNumber(limit) ?? 12;
+  const currentPage = getSearchParamsAsNumber(page) ?? 1;
+  const sortDirectionString = getSearchParamsAsString(sortDirection) ?? "asc";
+  const queryString = getSearchParamsAsString(query);
 
   // We can now fetch the data inside here with all of the parameters we want without passing them around from page to component
   const {
