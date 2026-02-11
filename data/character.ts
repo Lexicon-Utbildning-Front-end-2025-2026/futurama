@@ -14,15 +14,22 @@ export async function getCharacters(
   limit = 12,
   sortDirection = "asc",
   page = 1,
+  query?: string,
 ): Promise<CharactersResponse> {
   // sometimes we want to check if the user is authenticated before returning any data
   //if (!admin) return null
 
+  // make the query string dynamically with the params
   const params = new URLSearchParams({
     size: limit.toString(),
     orderByDirection: sortDirection,
     page: page.toString(),
   });
+
+  // if there is a query, add it to the params
+  if (query) {
+    params.set("query", query);
+  }
 
   try {
     const response = await fetch(

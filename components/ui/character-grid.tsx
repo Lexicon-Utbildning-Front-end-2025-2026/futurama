@@ -16,6 +16,7 @@ export default async function CharacterGrid({
     limit = "12",
     sortDirection = "asc",
     page = "1",
+    query,
   } = await searchParams;
 
   // Type for searchParams are by default - searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -26,13 +27,16 @@ export default async function CharacterGrid({
   const sortDirectionString = Array.isArray(sortDirection)
     ? sortDirection[0]
     : sortDirection;
+  const queryString = Array.isArray(query)
+    ? query[0]
+    : query;
 
   // We can now fetch the data inside here with all of the parameters we want without passing them around from page to component
   const {
     items: characters,
     total,
     pages,
-  } = await getCharacters(currentLimit, sortDirectionString, currentPage);
+  } = await getCharacters(currentLimit, sortDirectionString, currentPage, queryString);
 
   return (
     <section className="container mx-auto px-4 py-16 space-y-4">

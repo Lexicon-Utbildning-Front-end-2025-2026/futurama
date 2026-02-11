@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import data from "@/data/menu.json";
+import SearchForm from "../ui/search";
 
 export default function MainNavigation() {
   return (
@@ -15,6 +16,7 @@ export default function MainNavigation() {
             alt="Futurama"
           />
         </Link>
+        <SearchForm />
         <ul className="flex gap-6">
           {
             //renderMenu()
